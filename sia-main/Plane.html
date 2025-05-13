@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flight Reservation with Payment</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #c98243d0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 800px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .logo {
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      top: 2rem;
+    }
+
+    .header {
+      position: relative;
+      height: 250px;
+      background: url('494822027_1310039663396721_8220231408459856898_n.png') center/cover no-repeat;
+    }
+
+    .header h1 {
+      position: absolute;
+      bottom: 14px;
+      left: 20px;
+      color: #000000;
+      font-size: 2rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    form { padding: 2rem; }
+    form h2 { margin: 1rem 0; font-size: 1.75rem; color: #333; }
+    form p.sub { margin: 1rem 0; color: #555; }
+
+    .grid { display: grid; gap: 1rem; }
+    .row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .row-2 { grid-template-columns: 1fr 1fr; }
+    .row-1 { grid-template-columns: 1fr; }
+
+    label {
+      font-size: 0.9rem;
+      color: #444;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    input[type="radio"] {
+      width: auto;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn-submit {
+      background: #18bd5b;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-submit:hover {
+      background: #676867;
+    }
+
+    .total {
+      font-size: 1.2rem;
+      margin: 1rem 0;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .row-3, .row-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <a href="userdashboard.html">
+          <img src="./images/assasino.jpeg" alt="Flight Logo" style="width: 250px; height: auto;">
+        </a>
+      </div>
+    </nav>
+
+    <form id="reservationForm">
+      <h1>Flight Reservation</h1>
+      <h2>Traveler Information</h2>
+      <p class="sub">Please fill out your details accurately:</p>
+
+      <div class="grid row-3">
+        <div><label for="firstName">First Name</label><input type="text" id="firstName" required /></div>
+        <div><label for="middleName">Middle Name</label><input type="text" id="middleName" /></div>
+        <div><label for="lastName">Last Name</label><input type="text" id="lastName" required /></div>
+      </div>
+
+      <div class="grid row-2" style="margin-top: 1rem;">
+        <div><label for="birthDate">Date of Birth</label><input type="date" id="birthDate" required /></div>
+        <div>
+          <label>Gender</label>
+          <div class="radio-group">
+            <label><input type="radio" name="gender" value="male" required /> Male</label>
+            <label><input type="radio" name="gender" value="female" /> Female</label>
+            <label><input type="radio" name="gender" value="other" /> Other</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid row-2" style="margin-top: 1rem;">
+        <div><label for="nationality">Nationality</label><input type="text" id="nationality" required /></div>
+        <div><label for="passportNumber">Passport Number</label><input type="text" id="passportNumber" required /></div>
+      </div>
+
+      <div class="grid row-2" style="margin-top: 1rem;">
+        <div><label for="email">Email</label><input type="email" id="email" required /></div>
+        <div><label for="phoneNumber">Phone Number</label><input type="tel" id="phoneNumber" placeholder="e.g. +1234567890" required /></div>
+      </div>
+
+      <h2 style="margin-top: 2rem;">Flight Details</h2>
+
+      <div>
+        <label for="Triptype">Trip Type</label>
+        <select id="Triptype" required>
+          <option>Please select</option>
+          <option value="oneway">One Way</option>
+          <option value="roundtrip">Round Trip</option>
+        </select>
+      </div>
+
+      <div class="grid row-2">
+        <div>
+          <label for="departure">Departure City</label>
+          <select id="departure">
+            <option>Please Select</option>
+            <option value="bali">Bali</option>
+            <option value="santorini">Santorini</option>
+            <option value="peru">Peru</option>
+            <option value="japan">Japan</option>
+            <option value="bolivia">Bolivia</option>
+            <option value="newyork">New York</option>
+            <option value="paris">Paris</option>
+            <option value="uae">UAE</option>
+          </select>
+        </div>
+        <div>
+          <label for="arrival">Arrival City</label>
+          <select id="arrival">
+            <option>Please Select</option>
+            <option value="bali">Bali</option>
+            <option value="santorini">Santorini</option>
+            <option value="peru">Peru</option>
+            <option value="japan">Japan</option>
+            <option value="bolivia">Bolivia</option>
+            <option value="newyork">New York</option>
+            <option value="paris">Paris</option>
+            <option value="uae">UAE</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid row-2" style="margin-top: 1rem;">
+        <div><label for="departureDate">Departure Date</label><input type="date" id="departureDate" required /></div>
+        <div id="returnSection">
+          <label for="returnDate">Return Date (optional)</label>
+          <input type="date" id="returnDate" />
+          <div id="oneWayNotice" style="display: none; color: #c00; font-weight: bold; margin-top: 0.5rem;">
+            Note: One way trip selected. Return date is not required.
+          </div>
+        </div>
+      </div>
+
+     <div class="grid row-2" style="margin-top: 1rem;">
+  <div>
+    <label>Number of Passengers:</label>
+    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+      <div>
+        <label for="adults">Adult</label>
+        <input type="number" id="adults" min="1" value="1" required />
+      </div>
+      <div>
+        <label for="children">Child</label>
+        <input type="number" id="children" min="0" value="0" />
+      </div>
+      <div>
+        <label for="infants">Infant</label>
+        <input type="number" id="infants" min="0" value="0" />
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div class="grid row-1" style="margin-top: 1rem;">
+        <div>
+          <label for="airline">Choose Your Airline</label>
+          <select id="airline" required>
+            <option value="">-- Select Airline --</option>
+            <option value="airasia">AirAsia</option>
+            <option value="cebuPacific">Cebu Pacific</option>
+            <option value="pal">Philippine Airlines</option>
+            <option value="qatar">Qatar Airways</option>
+            <option value="emirates">Emirates</option>
+          </select>
+        </div>
+      </div>
+
+      <h2 style="margin-top: 2rem;">Payment Method</h2>
+      <div class="grid row-2">
+        <div>
+          <label for="paymentMethod">Select Payment Method</label>
+          <select id="paymentMethod" required>
+            <option value="creditCard">Credit Card</option>
+            <option value="debitCard">Debit Card</option>
+            <option value="gcash">Gcash</option>
+            <option value="maya">Maya</option>
+            <option value="paypal">PayPal</option>
+            <option value="bankTransfer">Bank Transfer</option>
+          </select>
+        </div>
+        <div>
+          <label for="paymentDetails">Payment Details</label>
+          <input type="text" id="paymentDetails" placeholder="Enter payment details (e.g., credit card number)" required />
+        </div>
+      </div>
+
+      <div class="total"></div>
+
+      <div style="text-align: center; margin-top: 2rem;">
+        <button type="button" class="btn-submit" onclick="submitReservation()">Submit</button>
+      </div>
+
+      <div class="success" id="confirmationMessage"></div>
+    </form>
+  </div>
+
+ <script>
+  const passengerInput = document.getElementById('passengers');
+  const classSelect = document.getElementById('travelClass');
+  const totalAmount = document.querySelector('.total');
+  const confirmationMessage = document.getElementById('confirmationMessage');
+  const prices = { economy: 150, business: 300, first: 500 };
+
+  const tripTypeSelect = document.getElementById('Triptype');
+  const returnDateInput = document.getElementById('returnDate');
+  const departureDateInput = document.getElementById('departureDate');
+  const oneWayNotice = document.getElementById('oneWayNotice');
+
+  const departureSelect = document.getElementById('departure');
+  const arrivalSelect = document.getElementById('arrival');
+
+  function updateTotal() {
+    const passengers = parseInt(passengerInput.value) || 1;
+    const selectedClass = classSelect.value;
+    const pricePerPerson = prices[selectedClass];
+    const total = passengers * pricePerPerson;
+    totalAmount.innerHTML = `Total: $${total}`;
+  }
+
+  function toggleReturnDate() {
+    const isOneWay = tripTypeSelect.value === 'oneway';
+    returnDateInput.style.display = isOneWay ? 'none' : 'block';
+    oneWayNotice.style.display = isOneWay ? 'block' : 'none';
+
+    if (isOneWay) {
+      returnDateInput.value = '';
+    }
+  }
+
+  const cityOptions = [
+    { value: "bali", label: "Bali" },
+    { value: "santorini", label: "Santorini" },
+    { value: "peru", label: "Peru" },
+    { value: "japan", label: "Japan" },
+    { value: "bolivia", label: "Bolivia" },
+    { value: "newyork", label: "New York" },
+    { value: "paris", label: "Paris" },
+    { value: "uae", label: "UAE" }
+  ];
+
+  function updateArrivalOptions() {
+    const selectedDeparture = departureSelect.value;
+    arrivalSelect.innerHTML = '<option>Please Select</option>';
+    cityOptions.forEach(city => {
+      if (city.value !== selectedDeparture) {
+        const option = document.createElement('option');
+        option.value = city.value;
+        option.textContent = city.label;
+        arrivalSelect.appendChild(option);
+      }
+    });
+  }
+
+  function validateDates() {
+    const depDateStr = departureDateInput.value;
+    const retDateStr = returnDateInput.value;
+
+    if (!depDateStr || !retDateStr) return;
+
+    const depDate = new Date(depDateStr);
+    const retDate = new Date(retDateStr);
+
+    if (retDate <= depDate) {
+      alert("Return date must be at least one day after the departure date.");
+      returnDateInput.value = '';
+    }
+  }
+
+  function updateReturnDateMin() {
+    const depDateStr = departureDateInput.value;
+    if (depDateStr) {
+      const depDate = new Date(depDateStr);
+      const nextDay = new Date(depDate);
+      nextDay.setDate(depDate.getDate() + 1);
+
+      const isoMinDate = nextDay.toISOString().split('T')[0];
+      returnDateInput.min = isoMinDate;
+    } else {
+      returnDateInput.removeAttribute("min");
+    }
+    validateDates();
+  }
+
+  function submitReservation() {
+    const name = document.getElementById('firstName').value.trim();
+    if (name === "") {
+      alert("Please enter your first name.");
+      return;
+    }
+    const total = totalAmount.textContent.replace('Total: $', '');
+    confirmationMessage.textContent = `Payment of $${total} successful. Thank you, ${name}, for your reservation!`;
+  }
+
+  // Event Listeners
+  passengerInput.addEventListener('input', updateTotal);
+  classSelect.addEventListener('change', updateTotal);
+  tripTypeSelect.addEventListener('change', toggleReturnDate);
+  departureSelect.addEventListener('change', updateArrivalOptions);
+
+  returnDateInput.addEventListener('change', validateDates);
+  departureDateInput.addEventListener('change', updateReturnDateMin);
+
+  // Initialize on page load
+  updateTotal();
+  toggleReturnDate();
+</script>
+
+
+
+
+</body>
+</html>

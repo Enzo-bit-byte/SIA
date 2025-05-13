@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: 'Verdana', Geneva, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f0e9;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #4a3726;
+      padding: 15px 30px;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-brand {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .navbar-menu {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .navbar-menu a:hover {
+      background-color: #5e4630;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-title {
+      font-size: 28px;
+      color: #4a3726;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      font-size: 16px;
+      color: #8e735b;
+      margin-bottom: 10px;
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #4a3726;
+    }
+
+    .recent-activity {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      color: #4a3726;
+    }
+
+    .activity-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .activity-table th,
+    .activity-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .activity-table th {
+      background-color: #f9f5f0;
+      color: #5e4630;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .btn-primary {
+      background-color: #5e4630;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #4a3726;
+    }
+
+    .btn-edit {
+      background-color: #4a9e6d;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background-color: #3c8e5c;
+    }
+
+    .btn-delete {
+      background-color: #e57373;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: #d45e5e;
+    }
+
+    .btn-logout {
+      background-color: #c45e5e;
+      color: white;
+    }
+
+    .btn-logout:hover {
+      background-color: #b34c4c;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">Admin Dashboard</div>
+    <div class="navbar-menu">
+      <a href="#">Users</a>
+      <a href="#">Settings</a>
+      <a href="#">Reports</a>
+      <a href="#" class="btn-logout" id="logoutBtn">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Admin Overview</h1>
+      <button class="btn btn-primary">Generate Report</button>
+    </div>
+
+    <div class="stats-cards">
+      <div class="card">
+        <div class="card-header">Total Users</div>
+        <div class="card-value">1,248</div>
+      </div>
+      <div class="card">
+        <div class="card-header">Active Today</div>
+        <div class="card-value">342</div>
+      </div>
+      <div class="card">
+        <div class="card-header">New This Week</div>
+        <div class="card-value">127</div>
+      </div>
+    </div>
+
+    <div class="recent-activity">
+      <div class="activity-header">
+        <h2 class="section-title">Flight Information</h2>
+        <a href="#">View All</a>
+      </div>
+      <table class="activity-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Flight Number</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Juan Dela Cruz</td>
+            <td>juan@example.com</td>
+            <td>FL123</td>
+            <td>10:00 AM</td>
+            <td>
+              <button class="btn btn-edit" onclick="editUser('juan@example.com', 'Juan Dela Cruz', 'FL123', '10:00 AM')">Edit</button>
+              <button class="btn btn-delete" onclick="deleteUser('juan@example.com')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Maria Santos</td>
+            <td>maria@example.com</td>
+            <td>FL456</td>
+            <td>02:30 PM</td>
+            <td>
+              <button class="btn btn-edit" onclick="editUser('maria@example.com', 'Maria Santos', 'FL456', '02:30 PM')">Edit</button>
+              <button class="btn btn-delete" onclick="deleteUser('maria@example.com')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Carlos Reyes</td>
+            <td>carlos@example.com</td>
+            <td>FL789</td>
+            <td>06:45 PM</td>
+            <td>
+              <button class="btn btn-edit" onclick="editUser('carlos@example.com', 'Carlos Reyes', 'FL789', '06:45 PM')">Edit</button>
+              <button class="btn btn-delete" onclick="deleteUser('carlos@example.com')">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function editUser(email, name, flightNumber, time) {
+      const newName = prompt('Edit Name:', name);
+      const newFlightNumber = prompt('Edit Flight Number:', flightNumber);
+      const newTime = prompt('Edit Time:', time);
+
+      if (newName && newFlightNumber && newTime) {
+        // Find the row in the table that matches the email
+        const rows = document.querySelectorAll('.activity-table tbody tr');
+        rows.forEach(row => {
+          const rowEmail = row.querySelector('td:nth-child(2)').textContent;
+          if (rowEmail === email) {
+            // Update the name, flight number, and time in the table
+            row.querySelector('td:nth-child(1)').textContent = newName;
+            row.querySelector('td:nth-child(3)').textContent = newFlightNumber;
+            row.querySelector('td:nth-child(4)').textContent = newTime;
+          }
+        });
+
+        alert(`User info updated:\nName: ${newName}\nFlight Number: ${newFlightNumber}\nTime: ${newTime}`);
+      }
+    }
+
+    function deleteUser(email) {
+      if (confirm(`Are you sure you want to delete the user with email: ${email}?`)) {
+        // Find and remove the row from the table
+        const rows = document.querySelectorAll('.activity-table tbody tr');
+        rows.forEach(row => {
+          const rowEmail = row.querySelector('td:nth-child(2)').textContent;
+          if (rowEmail === email) {
+            row.remove();
+          }
+        });
+        alert(`User with email ${email} has been deleted.`);
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to logout?')) {
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>
