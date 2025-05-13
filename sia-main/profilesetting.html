@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile Settings</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #fdfaf5;
+      color: #4a3b2c;
+    }
+
+    header {
+      background-color: #d2b48c;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #5a3825;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links li a {
+      color: #4a3b2c;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .nav-links li a:hover {
+      color: #3e2617;
+    }
+
+    .dashboard-hero {
+      background-color: #f3e4d7;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .dashboard-hero h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .dashboard-hero p {
+      font-size: 18px;
+      color: #5a3825;
+    }
+
+    .user-section {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #fff8f0;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #5a3825;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #a67c52;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #8c6239;
+    }
+
+    #logoutBtn {
+      padding: 10px 20px;
+      background-color: #8c6239;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="container">
+      <div class="logo">MY TRIPS</div>
+      <ul class="nav-links">
+        <li><a href="userdashboard.html">Dashboard</a></li>
+        <li><a href="#">Profile Settings</a></li>
+        <button id="logoutBtn">Logout</button>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="dashboard-hero">
+    <h1 id="welcomeMessage">Profile Settings</h1>
+    <p>Update your personal information</p>
+  </section>
+
+  <section class="user-section">
+    <div class="card-grid">
+      <!-- Personal Information -->
+      <div class="card">
+          <h3>Change Your Name</h3>
+          <form id="updateNameForm">
+            <div class="mb-3">
+              <p for="new_username" class="form-label">New Name</p>
+              <input type="text" class="form-control" id="new_username" name="new_username" required>
+            </div>
+            <button type="submit" class="btn" >
+              Update Name
+            </button>
+          </form>
+        </div>
+      </div>
+      </div>
+
+      <!-- Password Settings -->
+      <div class="card">
+        <h3>Password Settings</h3>
+        <p>Change your account password to keep your profile secure.</p>
+        <button href="#" class="btn" id="changePasswordBtn">Change Password</button>
+      </div>
+
+      
+    </div>
+  </section>
+
+  <script>
+    const supabaseClient = supabase.createClient(
+      'https://earorfersdklghjjpbly.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhcm9yZmVyc2RrbGdoampwYmx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzA2NDUsImV4cCI6MjA2MTAwNjY0NX0.Z5_llKXGniX7pNrce3jtWI6p32GlS7IltEbTml2ITio'
+    );
+
+    // Check if user is authenticated
+    async function checkAuthAndGreet() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        alert("You are not logged in. Redirecting to login page...");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const user = session.user;
+      const name = user.user_metadata.username || user.email || "User";
+      document.getElementById("welcomeMessage").textContent = `Welcome, ${name}`;
+    }
+
+    // Logout functionality
+    async function logout() {
+      const confirmLogout = confirm("Are you sure you want to logout?");
+      if (!confirmLogout) return;
+
+      try {
+        const { error } = await supabaseClient.auth.signOut();
+        sessionStorage.clear();
+        localStorage.clear();
+        if (error) {
+          console.warn("Logout error: " + error.message);
+          return;
+        }
+        window.location.href = "login.html";
+      } catch (err) {
+        console.error("Unexpected logout error:", err);
+        window.location.href = "dashboard.html";
+      }
+    }
+
+   document.getElementById("updateNameForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const newName = document.getElementById("new_username").value.trim();
+    if (!newName) return alert("Please enter a valid name.");
+
+    const { data, error } = await supabaseClient.auth.updateUser({
+      data: { username: newName }
+    });
+
+    if (error) {
+      console.error("Update failed:", error.message);
+      alert("Name update failed.");
+    } else {
+      alert("Name updated successfully!");
+      document.getElementById("welcomeMessage").textContent = `Welcome, ${newName}`;
+    }
+  });
+
+    // Password changing (example functionality)
+    document.getElementById('changePasswordBtn').addEventListener('click', async () => {
+      const newPassword = prompt("Enter your new password:");
+      if (newPassword) {
+        const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+        if (error) {
+          alert("Failed to update password: " + error.message);
+        } else {
+          alert("Password updated successfully!");
+        }
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+    checkAuthAndGreet();
+  </script>
+
+</body>
+</html>

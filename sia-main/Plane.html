@@ -172,7 +172,7 @@
       <div>
         <label for="Triptype">Trip Type</label>
         <select id="Triptype" required>
-          <option>Please select</option>
+          <option value="">Please select</option>
           <option value="oneway">One Way</option>
           <option value="roundtrip">Round Trip</option>
         </select>
@@ -183,6 +183,8 @@
           <label for="departure">Departure City</label>
           <select id="departure">
             <option>Please Select</option>
+            <option value="southkorea">South Korea</option>
+            <option value="philippines">Philippines</option>
             <option value="bali">Bali</option>
             <option value="santorini">Santorini</option>
             <option value="peru">Peru</option>
@@ -197,7 +199,9 @@
           <label for="arrival">Arrival City</label>
           <select id="arrival">
             <option>Please Select</option>
-            <option value="bali">Bali</option>
+            <option value="southkorea">South Korea</option>
+            <option value="philippines">Philippines</option>
+             <option value="bali">Bali</option>
             <option value="santorini">Santorini</option>
             <option value="peru">Peru</option>
             <option value="japan">Japan</option>
@@ -220,25 +224,25 @@
         </div>
       </div>
 
-     <div class="grid row-2" style="margin-top: 1rem;">
-  <div>
-    <label>Number of Passengers:</label>
-    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-      <div>
-        <label for="adults">Adult</label>
-        <input type="number" id="adults" min="1" value="1" required />
+      <div class="grid row-2" style="margin-top: 1rem;">
+        <div>
+          <label>Number of Passengers:</label>
+          <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+            <div>
+              <label for="adults">Adult</label>
+              <input type="number" id="adults" min="1" value="1" required />
+            </div>
+            <div>
+              <label for="children">Child</label>
+              <input type="number" id="children" min="0" value="0" />
+            </div>
+            <div>
+              <label for="infants">Infant</label>
+              <input type="number" id="infants" min="0" value="0" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <label for="children">Child</label>
-        <input type="number" id="children" min="0" value="0" />
-      </div>
-      <div>
-        <label for="infants">Infant</label>
-        <input type="number" id="infants" min="0" value="0" />
-      </div>
-    </div>
-  </div>
-</div>
 
       <div class="grid row-1" style="margin-top: 1rem;">
         <div>
@@ -261,10 +265,7 @@
           <select id="paymentMethod" required>
             <option value="creditCard">Credit Card</option>
             <option value="debitCard">Debit Card</option>
-            <option value="gcash">Gcash</option>
-            <option value="maya">Maya</option>
             <option value="paypal">PayPal</option>
-            <option value="bankTransfer">Bank Transfer</option>
           </select>
         </div>
         <div>
@@ -276,6 +277,7 @@
       <div class="total"></div>
 
       <div style="text-align: center; margin-top: 2rem;">
+        <div class="total"></div>
         <button type="button" class="btn-submit" onclick="submitReservation()">Submit</button>
       </div>
 
@@ -283,119 +285,141 @@
     </form>
   </div>
 
- <script>
-  const passengerInput = document.getElementById('passengers');
-  const classSelect = document.getElementById('travelClass');
-  const totalAmount = document.querySelector('.total');
-  const confirmationMessage = document.getElementById('confirmationMessage');
-  const prices = { economy: 150, business: 300, first: 500 };
+  <script>
+    const tripTypeSelect = document.getElementById('Triptype');
+    const returnDateInput = document.getElementById('returnDate');
+    const returnSection = document.getElementById('returnSection');
+    const oneWayNotice = document.getElementById('oneWayNotice');
+    const departureDateInput = document.getElementById('departureDate');
+    const departureSelect = document.getElementById('departure');
+    const arrivalSelect = document.getElementById('arrival');
+    const totalAmount = document.querySelector('.total');
+    const confirmationMessage = document.getElementById('confirmationMessage');
+    const adultInput = document.getElementById('adults');
+    const childInput = document.getElementById('children');
+    const infantInput = document.getElementById('infants');
 
-  const tripTypeSelect = document.getElementById('Triptype');
-  const returnDateInput = document.getElementById('returnDate');
-  const departureDateInput = document.getElementById('departureDate');
-  const oneWayNotice = document.getElementById('oneWayNotice');
+    const pricing = {
+  southkorea: 12000,
+  philippines: 15000,    
+  bali: 9000,
+  santorini: 10000,
+  peru: 8500,
+  japan: 9000,
+  bolivia: 13000,
+  newyork: 8000,
+  paris: 9000,
+  uae: 8000
+};
 
-  const departureSelect = document.getElementById('departure');
-  const arrivalSelect = document.getElementById('arrival');
 
-  function updateTotal() {
-    const passengers = parseInt(passengerInput.value) || 1;
-    const selectedClass = classSelect.value;
-    const pricePerPerson = prices[selectedClass];
-    const total = passengers * pricePerPerson;
-    totalAmount.innerHTML = `Total: $${total}`;
-  }
+    function toggleReturnDate() {
+      const isOneWay = tripTypeSelect.value === 'oneway';
+      returnSection.style.display = isOneWay ? 'none' : 'block';
+      oneWayNotice.style.display = isOneWay ? 'block' : 'none';
 
-  function toggleReturnDate() {
-    const isOneWay = tripTypeSelect.value === 'oneway';
-    returnDateInput.style.display = isOneWay ? 'none' : 'block';
-    oneWayNotice.style.display = isOneWay ? 'block' : 'none';
-
-    if (isOneWay) {
-      returnDateInput.value = '';
-    }
-  }
-
-  const cityOptions = [
-    { value: "bali", label: "Bali" },
-    { value: "santorini", label: "Santorini" },
-    { value: "peru", label: "Peru" },
-    { value: "japan", label: "Japan" },
-    { value: "bolivia", label: "Bolivia" },
-    { value: "newyork", label: "New York" },
-    { value: "paris", label: "Paris" },
-    { value: "uae", label: "UAE" }
-  ];
-
-  function updateArrivalOptions() {
-    const selectedDeparture = departureSelect.value;
-    arrivalSelect.innerHTML = '<option>Please Select</option>';
-    cityOptions.forEach(city => {
-      if (city.value !== selectedDeparture) {
-        const option = document.createElement('option');
-        option.value = city.value;
-        option.textContent = city.label;
-        arrivalSelect.appendChild(option);
+      if (isOneWay) {
+        returnDateInput.value = '';
       }
-    });
-  }
-
-  function validateDates() {
-    const depDateStr = departureDateInput.value;
-    const retDateStr = returnDateInput.value;
-
-    if (!depDateStr || !retDateStr) return;
-
-    const depDate = new Date(depDateStr);
-    const retDate = new Date(retDateStr);
-
-    if (retDate <= depDate) {
-      alert("Return date must be at least one day after the departure date.");
-      returnDateInput.value = '';
     }
+
+    function updateArrivalOptions() {
+      const selectedDeparture = departureSelect.value;
+      const cityOptions = [
+        { value: "southkorea", label: "South Korea" },
+        { value: "philippines", label: "Philippines" },
+        { value: "bali", label: "Bali" },
+        { value: "santorini", label: "Santorini" },
+        { value: "peru", label: "Peru" },
+        { value: "japan", label: "Japan" },
+        { value: "bolivia", label: "Bolivia" },
+        { value: "newyork", label: "New York" },
+        { value: "paris", label: "Paris" },
+        { value: "uae", label: "UAE" }
+      ];
+      arrivalSelect.innerHTML = '<option>Please Select</option>';
+      cityOptions.forEach(city => {
+        if (city.value !== selectedDeparture) {
+          const option = document.createElement('option');
+          option.value = city.value;
+          option.textContent = city.label;
+          arrivalSelect.appendChild(option);
+        }
+      });
+    }
+
+    function calculateTotal() {
+  const destination = arrivalSelect.value;
+  const basePrice = pricing[destination];
+
+  if (!basePrice) {
+    totalAmount.textContent = "Total: $0";
+    return;
   }
 
-  function updateReturnDateMin() {
-    const depDateStr = departureDateInput.value;
-    if (depDateStr) {
+  const adults = parseInt(adultInput.value) || 0;
+  const children = parseInt(childInput.value) || 0;
+  const infants = parseInt(infantInput.value) || 0;
+
+  const total = (adults * basePrice) + (children * basePrice * 0.75) + (infants * basePrice * 0.5);
+
+  totalAmount.textContent = `Total: $${total.toFixed(2)}`;
+}
+
+
+    function validateDates() {
+      const depDateStr = departureDateInput.value;
+      const retDateStr = returnDateInput.value;
+
+      if (!depDateStr || !retDateStr) return;
+
       const depDate = new Date(depDateStr);
-      const nextDay = new Date(depDate);
-      nextDay.setDate(depDate.getDate() + 1);
+      const retDate = new Date(retDateStr);
 
-      const isoMinDate = nextDay.toISOString().split('T')[0];
-      returnDateInput.min = isoMinDate;
-    } else {
-      returnDateInput.removeAttribute("min");
+      if (retDate <= depDate) {
+        alert("Return date must be at least one day after the departure date.");
+        returnDateInput.value = '';
+      }
     }
-    validateDates();
-  }
 
-  function submitReservation() {
-    const name = document.getElementById('firstName').value.trim();
-    if (name === "") {
-      alert("Please enter your first name.");
-      return;
+    function updateReturnDateMin() {
+      const depDateStr = departureDateInput.value;
+      if (depDateStr) {
+        const depDate = new Date(depDateStr);
+        const nextDay = new Date(depDate);
+        nextDay.setDate(depDate.getDate() + 1);
+        const isoMinDate = nextDay.toISOString().split('T')[0];
+        returnDateInput.min = isoMinDate;
+      } else {
+        returnDateInput.removeAttribute("min");
+      }
+      validateDates();
     }
-    const total = totalAmount.textContent.replace('Total: $', '');
-    confirmationMessage.textContent = `Payment of $${total} successful. Thank you, ${name}, for your reservation!`;
-  }
 
-  // Event Listeners
-  passengerInput.addEventListener('input', updateTotal);
-  classSelect.addEventListener('change', updateTotal);
-  tripTypeSelect.addEventListener('change', toggleReturnDate);
-  departureSelect.addEventListener('change', updateArrivalOptions);
+    function submitReservation() {
+      const name = document.getElementById('firstName').value.trim();
+      if (name === "") {
+        alert("Please enter your first name.");
+        return;
+      }
+      const total = totalAmount.textContent.replace('Total: $', '') || 0;
+      confirmationMessage.textContent = `Payment of $${total} successful. Thank you, ${name}, for your reservation!`;
 
-  returnDateInput.addEventListener('change', validateDates);
-  departureDateInput.addEventListener('change', updateReturnDateMin);
+    }
 
-  // Initialize on page load
-  updateTotal();
-  toggleReturnDate();
-</script>
+    // Initialize
+    tripTypeSelect.addEventListener('change', toggleReturnDate);
+    departureSelect.addEventListener('change', updateArrivalOptions);
+    returnDateInput.addEventListener('change', validateDates);
+    departureDateInput.addEventListener('change', updateReturnDateMin);
+    arrivalSelect.addEventListener('change', calculateTotal);
+    adultInput.addEventListener('change', calculateTotal);
+    childInput.addEventListener('change', calculateTotal);
+    infantInput.addEventListener('change', calculateTotal);
 
-
-
+    toggleReturnDate(); // Hide return section if oneway is selected by default
+    calculateTotal();
+  </script>
 
 </body>
 </html>

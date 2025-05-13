@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
       margin: 0;
@@ -133,7 +134,7 @@
   </header>
 
   <section class="dashboard-hero">
-    <h1>Welcome Back, Traveler!</h1>
+    <h1 id="welcomeMessage">Welcome Back, Traveler!</h1>
     <p>Check your bookings, explore new destinations, and manage your journey all in one place.</p>
   </section>
 
@@ -148,30 +149,50 @@
       <div class="card">
         <h3>Profile Settings</h3>
         <p>Update your personal info, preferences, or payment details.</p>
-        <a href="#" class="btn">Edit Profile</a>
+        <a href="profilesetting.html" class="btn">Edit Profile</a>
       </div>
     </div>
   </section>
 <script>
-    const userName = localStorage.getItem("firstName");
-  if (userName) {
-    document.querySelector("h1").textContent = `Welcome back, ${userName}!`;
+    const supabaseClient = supabase.createClient(
+      'https://earorfersdklghjjpbly.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhcm9yZmVyc2RrbGdoampwYmx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzA2NDUsImV4cCI6MjA2MTAwNjY0NX0.Z5_llKXGniX7pNrce3jtWI6p32GlS7IltEbTml2ITio'
+    );
+
+  async function checkAuthAndGreet() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      alert("You are not logged in. Redirecting to login page...");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const user = session.user;
+    const name = user.user_metadata.username || user.email || "User";
+    document.getElementById("welcomeMessage").textContent = `Welcome, ${name}`;
   }
 
-  // Logout button functionality
-  document.getElementById("logoutBtn").addEventListener("click", function () {
-    // Clear stored user data
-    localStorage.removeItem("firstName");
-    localStorage.removeItem("email");
+  async function logout() {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+    if (!confirmLogout) return;
 
-    // Redirect to login page
-    window.location.href = "login.html";
-  });
-
-  const userxName = localStorage.getItem("firstName");
-  if (userxName) {
-    document.querySelector("h1").textContent = `Welcome back, ${userxName}!`;
+    try {
+      const { error } = await supabaseClient.auth.signOut();
+      sessionStorage.clear();
+      localStorage.clear();
+      if (error) {
+        console.warn("Logout error: " + error.message);
+        return;
+      }
+      window.location.href = "login.html";
+    } catch (err) {
+      console.error("Unexpected logout error:", err);
+      window.location.href = "dashboard.html";
+    }
   }
+
+  document.getElementById("logoutBtn").addEventListener("click", logout);
+  checkAuthAndGreet();
 </script>
 
 </body>

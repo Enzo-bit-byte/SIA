@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reports</title>
+  <style>
+    body {
+      font-family: 'Verdana', Geneva, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f0e9;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #4a3726;
+      padding: 15px 30px;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-brand {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .navbar-menu {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .navbar-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .navbar-menu a:hover {
+      background-color: #5e4630;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      color: #4a3726;
+      margin-bottom: 20px;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .report-table th,
+    .report-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .report-table th {
+      background-color: #f9f5f0;
+      color: #5e4630;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .btn-edit {
+      background-color: #4a9e6d;
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background-color: #3c8e5c;
+    }
+
+    .btn-delete {
+      background-color: #e57373;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: #d45e5e;
+    }
+
+    .btn-logout {
+      background-color: #c45e5e;
+      color: white;
+    }
+
+    .btn-logout:hover {
+      background-color: #b34c4c;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-menu {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .report-table th,
+      .report-table td {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">Admin Dashboard</div>
+    <div class="navbar-menu">
+      <a href="admindashboard.html">Users</a>
+      <a href="#">Settings</a>
+      <a href="reports.html">Reports</a>
+    </div>
+  </nav>
+<div id="reports"></div>
+  <div class="container">
+    <h1 class="section-title">Submitted Contact Reports</h1>
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Message</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="reportsTableBody">
+        <!-- Populated dynamically by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://earorfersdklghjjpbly.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhcm9yZmVyc2RrbGdoampwYmx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzA2NDUsImV4cCI6MjA2MTAwNjY0NX0.Z5_llKXGniX7pNrce3jtWI6p32GlS7IltEbTml2ITio'
+    );
+
+    async function loadReports() {
+      const { data, error } = await supabase
+        .from('contacts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      const container = document.getElementById('reports');
+
+      if (error) {
+        container.innerHTML = '<p>Error loading messages.</p>';
+        console.error(error);
+        return;
+      }
+
+      if (data.length === 0) {
+        container.innerHTML = '<p>No messages yet.</p>';
+        return;
+      }
+
+      container.innerHTML = data.map(entry => `
+        <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+          <strong>Name:</strong> ${entry.name} <br>
+          <strong>Email:</strong> ${entry.email} <br>
+          <strong>Message:</strong><br> ${entry.message}
+        </div>
+      `).join('');
+    }
+
+    loadReports();
+  </script>
+</body>
+</html>
